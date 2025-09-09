@@ -3,125 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문서 번역요약 서비스</title>
-    <link rel="stylesheet" href="style.css">
+    <title>You ask, we answer! - AI 문서 번역요약 서비스</title>
+    <meta name="description" content="비영어권 이민자를 위한 AI 기반 문서 번역 및 요약 서비스">
+    <meta name="keywords" content="문서 번역, AI 요약, 이민자, 영어 문서, PDF 번역">
+    
+    <!-- CSS 모듈 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/button.css">
+    <link rel="stylesheet" href="css/components/card.css">
+    <link rel="stylesheet" href="css/components/modal.css">
+    <link rel="stylesheet" href="css/components/form.css">
+    <link rel="stylesheet" href="css/layouts/header.css">
+    <link rel="stylesheet" href="css/layouts/footer.css">
+    <link rel="stylesheet" href="css/layouts/grid.css">
+    
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📄 문서 번역요약 서비스</h1>
-            <p>PDF, Word, 이미지 파일을 업로드하여 번역과 요약을 받아보세요</p>
+    <div class="app">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <h1>You ask, we answer!</h1>
+                        <p>비영어권 이민자를 위한 AI 문서 처리 서비스</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" id="helpBtn">도움말</button>
+                        <button class="btn btn-primary" id="settingsBtn">설정</button>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <main>
-            <!-- 파일 업로드 섹션 -->
-            <section class="upload-section">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-content">
-                        <div class="upload-icon">📁</div>
-                        <h3>파일을 드래그하거나 클릭하여 업로드</h3>
-                        <p>PDF, Word, 이미지, 텍스트 파일 지원</p>
-                        <button class="upload-btn" id="uploadBtn">파일 선택</button>
+        <!-- 메인 컨텐츠 -->
+        <main class="main">
+            <div class="container">
+                <!-- 설정 바 -->
+                <section class="settings-bar">
+                    <div class="language-setting">
+                        <span class="setting-label">언어 설정:</span>
+                        <button class="language-btn" id="languageBtn">
+                            <span id="selectedLanguage">영어 → 한국어</span>
+                            <span class="arrow">▼</span>
+                        </button>
                     </div>
-                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.bmp" style="display: none;">
-                </div>
-            </section>
-
-            <!-- 파일 정보 섹션 -->
-            <section class="file-info-section" id="fileInfoSection" style="display: none;">
-                <div class="file-info">
-                    <h3>📄 업로드된 파일</h3>
-                    <div class="file-details">
-                        <span id="fileName"></span>
-                        <span id="fileSize"></span>
-                        <button class="remove-btn" id="removeFile">×</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 추출된 텍스트 섹션 -->
-            <section class="text-section" id="textSection" style="display: none;">
-                <div class="text-container">
-                    <h3>📝 추출된 텍스트</h3>
-                    <div class="text-content" id="extractedText"></div>
-                </div>
-            </section>
-
-            <!-- 작업 선택 섹션 -->
-            <section class="action-section" id="actionSection" style="display: none;">
-                <div class="action-buttons">
-                    <button class="action-btn" id="translateBtn">🌐 번역하기</button>
-                    <button class="action-btn" id="summarizeBtn">📋 요약하기</button>
-                    <button class="action-btn" id="bothBtn">🔄 번역 + 요약</button>
-                </div>
-            </section>
-
-            <!-- 번역 설정 섹션 -->
-            <section class="translate-section" id="translateSection" style="display: none;">
-                <h3>🌐 번역 설정</h3>
-                <div class="translate-options">
-                    <div class="option-group">
-                        <label for="sourceLang">원본 언어:</label>
-                        <select id="sourceLang">
-                            <option value="auto">자동 감지</option>
-                            <option value="ko">한국어</option>
-                            <option value="en">영어</option>
-                            <option value="ja">일본어</option>
-                            <option value="zh">중국어</option>
+                    <div class="summary-setting">
+                        <span class="setting-label">요약 설정:</span>
+                        <select id="summaryMethod" class="select">
+                            <option value="detailed">상세 요약</option>
+                            <option value="brief">간단 요약</option>
+                        </select>
+                        <select id="sentenceCount" class="select">
+                            <option value="3">3문장</option>
+                            <option value="5">5문장</option>
+                            <option value="10">10문장</option>
                         </select>
                     </div>
-                    <div class="option-group">
-                        <label for="targetLang">번역 언어:</label>
-                        <select id="targetLang">
-                            <option value="ko">한국어</option>
-                            <option value="en">영어</option>
-                            <option value="ja">일본어</option>
-                            <option value="zh">중국어</option>
-                        </select>
-                    </div>
-                    <button class="execute-btn" id="executeTranslate">번역 실행</button>
-                </div>
-            </section>
+                </section>
 
-            <!-- 요약 설정 섹션 -->
-            <section class="summarize-section" id="summarizeSection" style="display: none;">
-                <h3>📋 요약 설정</h3>
-                <div class="summarize-options">
-                    <div class="option-group">
-                        <label for="summarizeMethod">요약 방법:</label>
-                        <select id="summarizeMethod">
-                            <option value="gpt">GPT 상세 요약 (맥락 포함)</option>
-                            <option value="brief">GPT 간단 요약 (핵심만)</option>
-                        </select>
+                <!-- 파일 업로드 섹션 -->
+                <section class="upload-section">
+                    <div class="upload-card">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-content">
+                                <div class="upload-icon">📁</div>
+                                <h3>파일을 드래그하거나 클릭하여 업로드</h3>
+                                <p>PDF, Word, 이미지, 텍스트 파일 지원</p>
+                                <button class="btn btn-primary upload-btn" id="uploadBtn">파일 선택</button>
+                            </div>
+                        </div>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.bmp" style="display: none;">
                     </div>
-                    <div class="option-group">
-                        <label for="sentenceCount">문장 수:</label>
-                        <input type="number" id="sentenceCount" min="1" max="10" value="3">
+                </section>
+
+                <!-- 결과 섹션 -->
+                <section class="result-section" id="resultSection" style="display: none;">
+                    <div class="result-header">
+                        <h3>📊 처리 결과</h3>
+                        <div class="result-actions">
+                            <button class="btn btn-outline" id="copyBtn">📋 복사</button>
+                            <button class="btn btn-outline" id="downloadBtn">💾 다운로드</button>
+                            <button class="btn btn-secondary" id="retryBtn">🔄 다시하기</button>
+                        </div>
                     </div>
-                    <button class="execute-btn" id="executeSummarize">요약 실행</button>
-                </div>
-            </section>
+                    <div class="result-content">
+                        <div class="result-item original-text">
+                            <div class="result-label">원문 (영어)</div>
+                            <div class="result-text"></div>
+                        </div>
+                        <div class="result-item translated-text">
+                            <div class="result-label">번역 (모국어)</div>
+                            <div class="result-text"></div>
+                        </div>
+                        <div class="result-item summary-text">
+                            <div class="result-label">요약</div>
+                            <div class="result-text"></div>
+                        </div>
+                    </div>
+                </section>
 
-            <!-- 결과 섹션 -->
-            <section class="result-section" id="resultSection" style="display: none;">
-                <h3>📊 결과</h3>
-                <div class="result-content" id="resultContent"></div>
-                <div class="result-actions">
-                    <button class="copy-btn" id="copyResult">📋 복사</button>
-                    <button class="download-btn" id="downloadResult">💾 다운로드</button>
-                </div>
-            </section>
-
-            <!-- 로딩 오버레이 -->
-            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-                <div class="loading-content">
-                    <div class="spinner"></div>
-                    <p id="loadingText">처리 중...</p>
+                <!-- 처리 중 오버레이 -->
+                <div class="processing-overlay" id="processingOverlay" style="display: none;">
+                    <div class="processing-content">
+                        <div class="spinner"></div>
+                        <p class="processing-text">AI가 문서를 처리 중입니다...</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <!-- 푸터 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>서비스</h4>
+                        <ul>
+                            <li><a href="#features">기능</a></li>
+                            <li><a href="#pricing">가격</a></li>
+                            <li><a href="#support">고객지원</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>회사</h4>
+                        <ul>
+                            <li><a href="#about">회사소개</a></li>
+                            <li><a href="#privacy">개인정보처리방침</a></li>
+                            <li><a href="#terms">이용약관</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>연락처</h4>
+                        <ul>
+                            <li><a href="mailto:support@example.com">support@example.com</a></li>
+                            <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 You ask, we answer! All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- 스크롤 투 탑 버튼 -->
+        <button class="scroll-to-top" id="scrollToTop" style="display: none;">
+            ↑
+        </button>
     </div>
 
-    <script src="script.js"></script>
+    <!-- JavaScript 모듈 -->
+    <script src="js/models/DocumentModel.js"></script>
+    <script src="js/models/LanguageModel.js"></script>
+    <script src="js/models/SettingsModel.js"></script>
+    <script src="js/services/APIService.js"></script>
+    <script src="js/services/FileService.js"></script>
+    <script src="js/services/StorageService.js"></script>
+    <script src="js/views/UploadView.js"></script>
+    <script src="js/views/LanguageView.js"></script>
+    <script src="js/views/ResultView.js"></script>
+    <script src="js/views/ModalView.js"></script>
+    <script src="js/controllers/DocumentController.js"></script>
+    <script src="js/controllers/LanguageController.js"></script>
+    <script src="js/controllers/UIController.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
