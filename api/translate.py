@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-from deep_translator import GoogleTranslator
+from openai import OpenAI
 import traceback
 
 class handler(BaseHTTPRequestHandler):
@@ -21,9 +21,44 @@ class handler(BaseHTTPRequestHandler):
                 self.send_error_response(400, "텍스트가 필요합니다.")
                 return
             
-            # 번역 실행
-            translator = GoogleTranslator(source=source_lang, target=target_lang)
-            translated_text = translator.translate(text)
+            # OpenAI API 키 확인
+            api_key = os.getenv('OPENAI_API_KEY')
+            if not api_key:
+                self.send_error_response(500, "OpenAI API 키가 설정되지 않았습니다.")
+                return
+            
+            # OpenAI 클라이언트 초기화
+            client = OpenAI(api_key=api_key)
+            
+            # 언어 코드를 언어명으로 변환
+            lang_names = {
+                "ko": "한국어",
+                "en": "영어",
+                "ja": "일본어", 
+                "zh": "중국어",
+                "es": "스페인어",
+                "fr": "프랑스어",
+                "de": "독일어",
+                "ru": "러시아어"
+            }
+            
+            target_lang_name = lang_names.get(target_lang, target_lang)
+            source_lang_name = lang_names.get(source_lang, source_lang) if source_lang != 'auto' else '자동 감지'
+            
+            # GPT를 사용한 번역
+            prompt = f"다음 텍스트를 {target_lang_name}로 번역해주세요. 원문의 의미와 뉘앙스를 정확히 전달하되 자연스러운 {target_lang_name}로 번역해주세요:\n\n{text}"
+            
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": f"당신은 전문 번역가입니다. 주어진 텍스트를 정확하고 자연스럽게 {target_lang_name}로 번역합니다."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=2000,
+                temperature=0.3
+            )
+            
+            translated_text = response.choices[0].message.content.strip()
             
             # 응답 데이터
             response_data = {
@@ -31,7 +66,8 @@ class handler(BaseHTTPRequestHandler):
                 "original_text": text,
                 "translated_text": translated_text,
                 "source_language": source_lang,
-                "target_language": target_lang
+                "target_language": target_lang,
+                "model": "gpt-4o"
             }
             
             self.send_success_response(response_data)
@@ -54,7 +90,8 @@ class handler(BaseHTTPRequestHandler):
         
         response_data = {
             "success": True,
-            "supported_languages": supported_languages
+            "supported_languages": supported_languages,
+            "model": "gpt-4o"
         }
         
         self.send_success_response(response_data)
