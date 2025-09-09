@@ -1,0 +1,49 @@
+from http.server import BaseHTTPRequestHandler
+from controllers.translation_controller import TranslationController
+from views.api_response import APIResponseHandler
+
+class handler(BaseHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self.translation_controller = TranslationController()
+        super().__init__(*args, **kwargs)
+    
+    def do_POST(self):
+        try:
+            # 요청 데이터 파싱
+            data = APIResponseHandler.parse_json_request(self)
+            
+            # 번역 처리
+            result = self.translation_controller.translate_text(data)
+            
+            # 응답 전송
+            if result.get('success'):
+                APIResponseHandler.send_success_response(self, result)
+            else:
+                APIResponseHandler.send_error_response(
+                    self, 
+                    result.get('error', '번역 처리 중 오류가 발생했습니다.'),
+                    result.get('status_code', 500)
+                )
+                
+        except Exception as e:
+            APIResponseHandler.send_error_response(self, f"번역 중 오류가 발생했습니다: {str(e)}")
+    
+    def do_GET(self):
+        try:
+            # 지원하는 언어 목록 반환
+            result = self.translation_controller.get_supported_languages()
+            
+            if result.get('success'):
+                APIResponseHandler.send_success_response(self, result)
+            else:
+                APIResponseHandler.send_error_response(
+                    self,
+                    result.get('error', '언어 목록을 가져오는 중 오류가 발생했습니다.'),
+                    result.get('status_code', 500)
+                )
+                
+        except Exception as e:
+            APIResponseHandler.send_error_response(self, f"언어 목록 조회 중 오류가 발생했습니다: {str(e)}")
+    
+    def do_OPTIONS(self):
+        APIResponseHandler.send_cors_response(self)
