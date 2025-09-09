@@ -106,6 +106,55 @@ class App {
     document.addEventListener('appSuccess', (e) => {
       this.handleSuccess(e.detail.message);
     });
+
+    // 모바일 메뉴 토글
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (mobileMenuToggle && mobileMenu) {
+      mobileMenuToggle.addEventListener('click', () => {
+        mobileMenuToggle.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+      });
+    }
+
+    // 히어로 섹션 버튼들
+    const startBtn = document.getElementById('startBtn');
+    const learnMoreBtn = document.getElementById('learnMoreBtn');
+    
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        // 문서 업로드 섹션으로 스크롤
+        const uploadSection = document.querySelector('.upload-section');
+        if (uploadSection) {
+          uploadSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+    
+    if (learnMoreBtn) {
+      learnMoreBtn.addEventListener('click', () => {
+        // 도움말 모달 열기
+        this.controllers.ui.showHelp();
+      });
+    }
+
+    // 네비게이션 링크 활성화
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        // 모든 링크에서 active 클래스 제거
+        navLinks.forEach(l => l.classList.remove('active'));
+        // 클릭된 링크에 active 클래스 추가
+        e.target.classList.add('active');
+        
+        // 모바일 메뉴 닫기
+        if (mobileMenu && mobileMenu.classList.contains('active')) {
+          mobileMenuToggle.classList.remove('active');
+          mobileMenu.classList.remove('active');
+        }
+      });
+    });
   }
 
   /**

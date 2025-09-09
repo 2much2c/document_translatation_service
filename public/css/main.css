@@ -130,6 +130,160 @@ body {
   padding: var(--spacing-8) 0;
 }
 
+/* 히어로 섹션 */
+.hero {
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.05));
+  padding: var(--spacing-20) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23e2e8f0" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-12);
+  align-items: center;
+}
+
+.hero-content {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-4);
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-4);
+}
+
+.hero-description {
+  font-size: var(--font-size-lg);
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin-bottom: var(--spacing-8);
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInRight 0.8s ease-out 0.2s both;
+}
+
+.hero-illustration {
+  position: relative;
+  width: 400px;
+  height: 300px;
+  background: white;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-illustration::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 64, 175, 0.1));
+  z-index: 1;
+}
+
+.document-icon,
+.ai-icon,
+.translation-icon {
+  position: absolute;
+  font-size: var(--font-size-4xl);
+  z-index: 2;
+  animation: float 3s ease-in-out infinite;
+}
+
+.document-icon {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.ai-icon {
+  top: 50%;
+  right: 20%;
+  animation-delay: 1s;
+}
+
+.translation-icon {
+  bottom: 20%;
+  left: 50%;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* 설정 바 */
 .settings-bar {
   display: flex;
@@ -496,11 +650,47 @@ body {
   .container {
     max-width: 768px;
   }
+  
+  .hero .container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+    text-align: center;
+  }
+  
+  .hero-illustration {
+    width: 300px;
+    height: 200px;
+  }
 }
 
 @media (max-width: 768px) {
   .main {
     padding: var(--spacing-6) 0;
+  }
+  
+  .hero {
+    padding: var(--spacing-12) 0;
+  }
+  
+  .hero-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .hero-description {
+    font-size: var(--font-size-base);
+  }
+  
+  .hero-actions {
+    justify-content: center;
+  }
+  
+  .hero-illustration {
+    width: 250px;
+    height: 180px;
   }
   
   .upload-area {
@@ -515,6 +705,37 @@ body {
 @media (max-width: 480px) {
   .container {
     padding: 0 var(--spacing-3);
+  }
+  
+  .hero {
+    padding: var(--spacing-8) 0;
+  }
+  
+  .hero-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .hero-description {
+    font-size: var(--font-size-sm);
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .hero-illustration {
+    width: 200px;
+    height: 150px;
   }
   
   .upload-area {

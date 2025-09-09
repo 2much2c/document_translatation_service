@@ -30,15 +30,62 @@
                 <div class="header-content">
                     <div class="logo">
                         <h1>You ask, we answer!</h1>
-                        <p>비영어권 이민자를 위한 AI 문서 처리 서비스</p>
                     </div>
+                    <nav class="header-nav">
+                        <ul class="header-menu">
+                            <li><a href="#document-summary" class="nav-link">문서요약</a></li>
+                            <li><a href="#scam-analysis" class="nav-link">스캠분석</a></li>
+                            <li><a href="#language-settings" class="nav-link">언어설정</a></li>
+                            <li><a href="#login" class="nav-link">로그인/회원가입</a></li>
+                        </ul>
+                    </nav>
                     <div class="header-actions">
                         <button class="btn btn-outline" id="helpBtn">도움말</button>
                         <button class="btn btn-primary" id="settingsBtn">설정</button>
                     </div>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <div class="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                </div>
+                <div class="mobile-menu" id="mobileMenu">
+                    <ul>
+                        <li><a href="#document-summary" class="nav-link">문서요약</a></li>
+                        <li><a href="#scam-analysis" class="nav-link">스캠분석</a></li>
+                        <li><a href="#language-settings" class="nav-link">언어설정</a></li>
+                        <li><a href="#login" class="nav-link">로그인/회원가입</a></li>
+                    </ul>
                 </div>
             </div>
         </header>
+
+        <!-- 히어로 섹션 -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">You ask, we answer!</h1>
+                    <p class="hero-subtitle">비영어권 이민자를 위한 AI 문서 처리 서비스</p>
+                    <p class="hero-description">
+                        영어 문서를 모국어로 번역하고 핵심 내용을 요약해드립니다.<br>
+                        스캠 문서를 분석하여 안전을 보장합니다.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" id="startBtn">지금 시작하기</button>
+                        <button class="btn btn-outline btn-lg" id="learnMoreBtn">더 알아보기</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <div class="document-icon">📄</div>
+                        <div class="ai-icon">🤖</div>
+                        <div class="translation-icon">🌐</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- 메인 컨텐츠 -->
         <main class="main">
