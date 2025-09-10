@@ -41,6 +41,7 @@ class App {
    */
   initializeServices() {
     this.services = {
+      eventBus: window.eventBus,  // 전역 EventBus 사용
       api: new APIService(),
       file: new FileService(),
       storage: new StorageService()
@@ -92,19 +93,19 @@ class App {
    * 전역 이벤트 바인딩
    */
   bindGlobalEvents() {
-    // 앱 상태 변경 이벤트
-    document.addEventListener('appStateChanged', (e) => {
-      this.handleAppStateChange(e.detail);
+    // EventBus를 통한 이벤트 구독
+    this.eventBus = this.services.eventBus;
+    
+    this.eventBus.on('app.stateChanged', (data) => {
+      this.handleAppStateChange(data);
     });
 
-    // 에러 이벤트
-    document.addEventListener('appError', (e) => {
-      this.handleError(e.detail.error);
+    this.eventBus.on('app.error', (data) => {
+      this.handleError(data.error);
     });
 
-    // 성공 이벤트
-    document.addEventListener('appSuccess', (e) => {
-      this.handleSuccess(e.detail.message);
+    this.eventBus.on('app.success', (data) => {
+      this.handleSuccess(data.message);
     });
 
     // 모바일 메뉴 토글

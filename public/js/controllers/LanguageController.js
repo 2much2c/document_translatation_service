@@ -25,14 +25,15 @@ class LanguageController {
    * 이벤트 바인딩
    */
   bindEvents() {
-    // 언어 변경 이벤트
-    document.addEventListener('languageChanged', (e) => {
-      this.handleLanguageChange(e.detail.language);
+    // EventBus를 통한 이벤트 구독
+    this.eventBus = window.eventBus;
+    
+    this.eventBus.on('language.changed', (data) => {
+      this.handleLanguageChange(data.language);
     });
 
-    // 설정 변경 이벤트
-    document.addEventListener('settingsChanged', (e) => {
-      this.handleSettingsChange(e.detail.settings);
+    this.eventBus.on('settings.changed', (data) => {
+      this.handleSettingsChange(data.settings);
     });
   }
 

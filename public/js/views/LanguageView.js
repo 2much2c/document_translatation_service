@@ -211,10 +211,8 @@ class LanguageView {
    * @param {string} langCode - 언어 코드
    */
   triggerLanguageChange(langCode) {
-    const event = new CustomEvent('languageChanged', { 
-      detail: { language: langCode } 
-    });
-    document.dispatchEvent(event);
+    // EventBus를 통한 이벤트 발행
+    window.eventBus.emit('language.changed', { language: langCode });
   }
 
   /**

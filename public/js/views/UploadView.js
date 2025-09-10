@@ -166,10 +166,8 @@ class UploadView {
    * @param {File} file - 업로드할 파일
    */
   triggerFileUpload(file) {
-    const event = new CustomEvent('fileUploaded', { 
-      detail: { file } 
-    });
-    document.dispatchEvent(event);
+    // EventBus를 통한 이벤트 발행
+    window.eventBus.emit('file.uploaded', { file });
   }
 
   /**

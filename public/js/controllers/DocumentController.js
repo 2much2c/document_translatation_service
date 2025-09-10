@@ -27,19 +27,19 @@ class DocumentController {
    * 이벤트 바인딩
    */
   bindEvents() {
-    // 파일 업로드 이벤트
-    document.addEventListener('fileUploaded', (e) => {
-      this.handleFileUpload(e.detail.file);
+    // EventBus를 통한 이벤트 구독
+    this.eventBus = window.eventBus;
+    
+    this.eventBus.on('file.uploaded', (data) => {
+      this.handleFileUpload(data.file);
     });
 
-    // 다시하기 이벤트
-    document.addEventListener('retryRequested', () => {
+    this.eventBus.on('document.retry', () => {
       this.handleRetry();
     });
 
-    // 언어 변경 이벤트
-    document.addEventListener('languageChanged', (e) => {
-      this.handleLanguageChange(e.detail.language);
+    this.eventBus.on('language.changed', (data) => {
+      this.handleLanguageChange(data.language);
     });
   }
 
