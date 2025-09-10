@@ -3,10 +3,9 @@ Google OAuth 콜백 처리 API
 """
 import os
 import requests
+import json
 from datetime import datetime, timedelta
 import jwt
-from fastapi import HTTPException
-from fastapi.responses import RedirectResponse
 
 # Google OAuth 설정
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -22,12 +21,15 @@ def handler(request):
     """Google OAuth 콜백 처리"""
     try:
         # URL에서 쿼리 파라미터 추출
-        query_params = request.query_params
+        query_params = request.get("queryStringParameters") or {}
         code = query_params.get("code")
         state = query_params.get("state")
         
         if not code:
-            raise HTTPException(status_code=400, detail="인증 코드가 없습니다")
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"error": "인증 코드가 없습니다"})
+            }
         
         # 1. 인증 코드로 액세스 토큰 요청
         token_data = {
@@ -44,7 +46,10 @@ def handler(request):
         
         access_token = token_info.get("access_token")
         if not access_token:
-            raise HTTPException(status_code=400, detail="액세스 토큰을 받을 수 없습니다")
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"error": "액세스 토큰을 받을 수 없습니다"})
+            }
         
         # 2. 사용자 정보 조회
         user_info_response = requests.get(
@@ -69,9 +74,22 @@ def handler(request):
         
         # 4. 프론트엔드로 리다이렉트 (토큰 포함)
         frontend_url = f"https://dts-self.vercel.app/?token={jwt_token}"
-        return RedirectResponse(url=frontend_url)
+        
+        return {
+            "statusCode": 302,
+            "headers": {
+                "Location": frontend_url
+            },
+            "body": ""
+        }
         
     except requests.RequestException as e:
-        raise HTTPException(status_code=400, detail=f"Google OAuth 오류: {str(e)}")
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": f"Google OAuth 오류: {str(e)}"})
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"서버 오류: {str(e)}")
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": f"서버 오류: {str(e)}"})
+        }

@@ -3,15 +3,11 @@ Google OAuth 로그인 시작 API
 """
 import os
 import secrets
-from fastapi import HTTPException
-from fastapi.responses import RedirectResponse
+import urllib.parse
 
 # Google OAuth 설정
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/auth/google/callback")
-
-# Google OAuth URLs
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 
 def handler(request):
@@ -29,9 +25,20 @@ def handler(request):
             "prompt": "consent"
         }
         
-        auth_url = f"{GOOGLE_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in params.items()])}"
+        # URL 인코딩
+        query_string = urllib.parse.urlencode(params)
+        auth_url = f"{GOOGLE_AUTH_URL}?{query_string}"
         
-        return RedirectResponse(url=auth_url)
+        return {
+            "statusCode": 302,
+            "headers": {
+                "Location": auth_url
+            },
+            "body": ""
+        }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"서버 오류: {str(e)}")
+        return {
+            "statusCode": 500,
+            "body": f"서버 오류: {str(e)}"
+        }
