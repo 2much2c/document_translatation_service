@@ -36,22 +36,10 @@ class UploadView {
   }
 
   /**
-   * 업로드 영역 생성
-   * @returns {HTMLElement} 업로드 영역 요소
+   * 업로드 영역 생성 - 제거됨
    */
   createUploadArea() {
-    const area = document.createElement('div');
-    area.id = 'uploadArea';
-    area.className = 'upload-area';
-    area.innerHTML = `
-      <div class="upload-content">
-        <div class="upload-icon">📁</div>
-        <h3>파일을 드래그하거나 클릭하여 업로드</h3>
-        <p>PDF, Word, 이미지, 텍스트 파일 지원</p>
-        <button class="upload-btn" id="uploadBtn">파일 선택</button>
-      </div>
-    `;
-    return area;
+    return null;
   }
 
   /**
@@ -228,10 +216,7 @@ class UploadView {
    */
   render() {
     // 뷰가 이미 렌더링되었는지 확인
-    if (!document.getElementById('uploadArea')) {
-      const container = document.querySelector('.upload-section') || document.body;
-      container.appendChild(this.uploadArea);
-    }
+    // 업로드 영역 제거됨
     
     if (!document.getElementById('fileInput')) {
       document.body.appendChild(this.fileInput);
