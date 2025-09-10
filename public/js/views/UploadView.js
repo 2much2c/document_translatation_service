@@ -80,37 +80,42 @@ class UploadView {
    * 이벤트 바인딩
    */
   bindEvents() {
-    // 업로드 영역 클릭
-    this.uploadArea.addEventListener('click', () => {
-      this.fileInput.click();
-    });
+    // 업로드 영역이 존재하는 경우에만 이벤트 바인딩
+    if (this.uploadArea) {
+      // 업로드 영역 클릭
+      this.uploadArea.addEventListener('click', () => {
+        this.fileInput.click();
+      });
 
-    // 파일 선택
-    this.fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        this.handleFileSelect(file);
-      }
-    });
+      // 드래그 앤 드롭 이벤트
+      this.uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        this.uploadArea.classList.add('drag-over');
+      });
 
-    // 드래그 앤 드롭 이벤트
-    this.uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      this.uploadArea.classList.add('drag-over');
-    });
+      this.uploadArea.addEventListener('dragleave', () => {
+        this.uploadArea.classList.remove('drag-over');
+      });
 
-    this.uploadArea.addEventListener('dragleave', () => {
-      this.uploadArea.classList.remove('drag-over');
-    });
+      this.uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        this.uploadArea.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          this.handleFileSelect(file);
+        }
+      });
+    }
 
-    this.uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      this.uploadArea.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file) {
-        this.handleFileSelect(file);
-      }
-    });
+    // 파일 선택 이벤트 (항상 바인딩)
+    if (this.fileInput) {
+      this.fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          this.handleFileSelect(file);
+        }
+      });
+    }
   }
 
   /**

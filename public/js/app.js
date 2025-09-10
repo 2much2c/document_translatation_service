@@ -264,11 +264,16 @@ class App {
   handleError(error) {
     console.error('App Error:', error);
     
-    // 에러 모달 표시
-    this.controllers.ui.showNotification(
-      error.message || '알 수 없는 오류가 발생했습니다.',
-      'error'
-    );
+    // 에러 모달 표시 (컨트롤러가 초기화된 경우에만)
+    if (this.controllers && this.controllers.ui) {
+      this.controllers.ui.showNotification(
+        error.message || '알 수 없는 오류가 발생했습니다.',
+        'error'
+      );
+    } else {
+      // 기본 에러 표시
+      alert(error.message || '알 수 없는 오류가 발생했습니다.');
+    }
     
     // 에러 이벤트 트리거
     this.triggerEvent('appError', { error });

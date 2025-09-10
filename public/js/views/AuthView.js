@@ -19,6 +19,7 @@ class AuthView {
     this.createUserProfile();
     this.createAuthModal();
     this.bindEvents();
+    this.addToHeader();
   }
 
   /**
@@ -177,6 +178,14 @@ class AuthView {
    * 헤더에 UI 추가
    */
   addToHeader() {
+    // DOM이 로드된 후 실행
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        this.addToHeader();
+      });
+      return;
+    }
+    
     const headerActions = document.querySelector('.header-actions');
     if (headerActions) {
       headerActions.appendChild(this.loginButton);
