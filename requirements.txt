@@ -33,3 +33,9 @@ aiofiles==23.2.1
 
 # 로깅
 loguru==0.7.2
+
+# JWT 토큰 처리
+PyJWT==2.8.0
+
+# 암호화
+cryptography==41.0.7

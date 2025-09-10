@@ -44,7 +44,8 @@ class App {
       eventBus: window.eventBus,  // 전역 EventBus 사용
       api: new APIService(),
       file: new FileService(),
-      storage: new StorageService()
+      storage: new StorageService(),
+      auth: window.authService
     };
   }
 
@@ -55,7 +56,8 @@ class App {
     this.models = {
       document: new DocumentModel(),
       language: new LanguageModel(),
-      settings: new SettingsModel()
+      settings: new SettingsModel(),
+      auth: window.authModel
     };
   }
 
@@ -67,7 +69,8 @@ class App {
       upload: new UploadView(),
       language: new LanguageView(),
       result: new ResultView(),
-      modal: new ModalView()
+      modal: new ModalView(),
+      auth: window.authView
     };
   }
 
@@ -85,7 +88,8 @@ class App {
         this.models.language,
         this.views.language
       ),
-      ui: new UIController()
+      ui: new UIController(),
+      auth: window.authController
     };
   }
 
