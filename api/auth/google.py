@@ -6,12 +6,12 @@ import json
 import requests
 from datetime import datetime, timedelta
 import jwt
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 import secrets
 
-router = APIRouter()
+app = FastAPI()
 
 # Google OAuth 설정
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -34,7 +34,7 @@ class UserInfo(BaseModel):
     name: str
     picture: str = None
 
-@router.get("/google")
+@app.get("/google")
 async def google_login():
     """Google OAuth 로그인 시작"""
     state = secrets.token_urlsafe(32)
@@ -53,7 +53,7 @@ async def google_login():
     
     return RedirectResponse(url=auth_url)
 
-@router.get("/google/callback")
+@app.get("/google/callback")
 async def google_callback(code: str, state: str):
     """Google OAuth 콜백 처리"""
     try:
@@ -104,7 +104,7 @@ async def google_callback(code: str, state: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"서버 오류: {str(e)}")
 
-@router.post("/verify")
+@app.post("/verify")
 async def verify_token(token: str):
     """JWT 토큰 검증"""
     try:
@@ -124,7 +124,7 @@ async def verify_token(token: str):
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="유효하지 않은 토큰입니다")
 
-@router.post("/logout")
+@app.post("/logout")
 async def logout():
     """로그아웃"""
     return {"message": "로그아웃되었습니다"}

@@ -129,7 +129,7 @@ class LanguageController {
   showLanguageChangeNotification(language) {
     const languageInfo = this.languageModel.getLanguageInfo(language);
     if (languageInfo) {
-      this.showToast(`언어가 ${languageInfo.name}로 변경되었습니다.`);
+      // 토스트 메시지 제거됨
     }
   }
 

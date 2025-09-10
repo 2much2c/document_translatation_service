@@ -6,6 +6,10 @@
       "use": "@vercel/python"
     },
     {
+      "src": "api/auth/*.py",
+      "use": "@vercel/python"
+    },
+    {
       "src": "public/**",
       "use": "@vercel/static"
     }
