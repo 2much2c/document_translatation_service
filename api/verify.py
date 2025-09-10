@@ -5,11 +5,11 @@ import os
 import json
 import jwt
 
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default-secret-key")
-
 def handler(request):
     """JWT 토큰 검증"""
     try:
+        JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default-secret-key")
+        
         # 요청 본문에서 토큰 추출
         body = json.loads(request.get("body") or "{}")
         token = body.get("token")

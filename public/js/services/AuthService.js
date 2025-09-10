@@ -4,7 +4,7 @@
  */
 class AuthService {
   constructor() {
-    this.baseURL = '/api/auth';
+    this.baseURL = '/api';
     this.googleAuthURL = `${this.baseURL}/google`;
   }
 

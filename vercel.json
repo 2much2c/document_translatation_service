@@ -16,20 +16,20 @@
   ],
   "routes": [
     {
-      "src": "/api/auth/google",
-      "dest": "/api/auth/google_login.py"
+      "src": "/api/google",
+      "dest": "/api/google.py"
     },
     {
-      "src": "/api/auth/google/callback",
-      "dest": "/api/auth/google_callback.py"
+      "src": "/api/google/callback",
+      "dest": "/api/google_callback.py"
     },
     {
-      "src": "/api/auth/verify",
-      "dest": "/api/auth/verify.py"
+      "src": "/api/verify",
+      "dest": "/api/verify.py"
     },
     {
-      "src": "/api/auth/logout",
-      "dest": "/api/auth/logout.py"
+      "src": "/api/logout",
+      "dest": "/api/logout.py"
     },
     {
       "src": "/api/(.*)",

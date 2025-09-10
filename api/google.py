@@ -5,14 +5,14 @@ import os
 import secrets
 import urllib.parse
 
-# Google OAuth 설정
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/auth/google/callback")
-GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-
 def handler(request):
     """Google OAuth 로그인 시작"""
     try:
+        # Google OAuth 설정
+        GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+        GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/google/callback")
+        GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+        
         state = secrets.token_urlsafe(32)
         
         params = {

@@ -7,19 +7,18 @@ import json
 from datetime import datetime, timedelta
 import jwt
 
-# Google OAuth 설정
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/auth/google/callback")
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default-secret-key")
-
-# Google OAuth URLs
-GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
-GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
-
 def handler(request):
     """Google OAuth 콜백 처리"""
     try:
+        # Google OAuth 설정
+        GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+        GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+        GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/google/callback")
+        JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default-secret-key")
+        
+        GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+        GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+        
         # URL에서 쿼리 파라미터 추출
         query_params = request.get("queryStringParameters") or {}
         code = query_params.get("code")
