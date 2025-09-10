@@ -251,39 +251,100 @@ body {
   left: 50%;
 }
 
-/* 설정 바 */
-.settings-bar {
-  display: flex;
+/* 서비스 소개 섹션 */
+.features-section {
+  padding: var(--spacing-16) 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-8);
-  padding: var(--spacing-6);
+}
+
+.feature-card {
   background: white;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--gray-200);
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.feature-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-4);
+}
+
+.feature-card h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-3);
+}
+
+.feature-card p {
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+/* CTA 섹션 */
+.cta-section {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  padding: var(--spacing-16) 0;
+  text-align: center;
+  border-radius: var(--radius-2xl);
+  margin: var(--spacing-8) 0;
+}
+
+.cta-content h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-4);
+}
+
+.cta-content p {
+  font-size: var(--font-size-lg);
   margin-bottom: var(--spacing-8);
-  align-items: center;
-  flex-wrap: wrap;
+  opacity: 0.9;
 }
 
+.cta-content .btn {
+  background: white;
+  color: var(--primary);
+  border: none;
+}
+
+.cta-content .btn:hover {
+  background: var(--gray-100);
+  transform: translateY(-2px);
+}
+
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-  .settings-bar {
-    flex-direction: column;
-    gap: var(--spacing-4);
-    align-items: stretch;
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
   }
-}
-
-.language-setting,
-.summary-setting {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-}
-
-.setting-label {
-  font-weight: 500;
-  color: var(--gray-700);
-  white-space: nowrap;
+  
+  .feature-card {
+    padding: var(--spacing-6);
+  }
+  
+  .cta-content h2 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .cta-content p {
+    font-size: var(--font-size-base);
+  }
 }
 
 /* 업로드 섹션 */
