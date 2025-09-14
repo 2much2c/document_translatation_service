@@ -16,6 +16,12 @@ def handler(request):
         GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/google/callback")
         JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default-secret-key")
         
+        if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+            return {
+                "statusCode": 500,
+                "body": "Google OAuth 설정이 완료되지 않았습니다"
+            }
+        
         GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
         GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
         

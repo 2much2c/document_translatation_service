@@ -13,6 +13,12 @@ def handler(request):
         GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://dts-self.vercel.app/api/google/callback")
         GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
         
+        if not GOOGLE_CLIENT_ID:
+            return {
+                "statusCode": 500,
+                "body": "Google Client ID가 설정되지 않았습니다"
+            }
+        
         state = secrets.token_urlsafe(32)
         
         params = {
