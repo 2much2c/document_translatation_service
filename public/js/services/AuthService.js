@@ -1,11 +1,42 @@
 /**
  * 인증 서비스
- * Google OAuth API와 통신합니다.
+ * Google OAuth JavaScript SDK를 사용합니다.
  */
 class AuthService {
   constructor() {
-    this.baseURL = '/api';
-    this.googleAuthURL = `${this.baseURL}/google`;
+    this.googleClientId = '575127200458-rt8jhis78tsuihvc6u7iag0lgt019coa.apps.googleusercontent.com';
+    this.isGoogleSDKLoaded = false;
+    this.initGoogleSDK();
+  }
+
+  /**
+   * Google SDK 초기화
+   */
+  initGoogleSDK() {
+    if (typeof google !== 'undefined' && google.accounts) {
+      this.isGoogleSDKLoaded = true;
+      this.initializeGoogleSignIn();
+    } else {
+      // SDK 로딩 대기
+      window.addEventListener('load', () => {
+        if (typeof google !== 'undefined' && google.accounts) {
+          this.isGoogleSDKLoaded = true;
+          this.initializeGoogleSignIn();
+        }
+      });
+    }
+  }
+
+  /**
+   * Google Sign-In 초기화
+   */
+  initializeGoogleSignIn() {
+    if (!this.isGoogleSDKLoaded) return;
+
+    google.accounts.id.initialize({
+      client_id: this.googleClientId,
+      callback: this.handleGoogleResponse.bind(this)
+    });
   }
 
   /**
@@ -14,8 +45,12 @@ class AuthService {
    */
   async loginWithGoogle() {
     try {
-      // Google OAuth 페이지로 리다이렉트
-      window.location.href = this.googleAuthURL;
+      if (!this.isGoogleSDKLoaded) {
+        throw new Error('Google SDK가 로드되지 않았습니다.');
+      }
+
+      // Google One Tap 또는 팝업 로그인
+      google.accounts.id.prompt();
     } catch (error) {
       console.error('Google 로그인 오류:', error);
       throw new Error('Google 로그인을 시작할 수 없습니다.');
@@ -23,26 +58,80 @@ class AuthService {
   }
 
   /**
-   * JWT 토큰 검증
+   * Google 응답 처리
+   * @param {Object} response - Google OAuth 응답
+   */
+  handleGoogleResponse(response) {
+    try {
+      // JWT 토큰 디코딩
+      const payload = this.decodeJWT(response.credential);
+      
+      // 사용자 정보 추출
+      const userData = {
+        id: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+        provider: 'google'
+      };
+
+      // 로그인 이벤트 발생
+      window.eventBus.emit('auth:login', {
+        user: userData,
+        provider: 'google'
+      });
+
+      console.log('Google 로그인 성공:', userData);
+    } catch (error) {
+      console.error('Google 응답 처리 오류:', error);
+      window.eventBus.emit('app:error', '로그인 처리 중 오류가 발생했습니다.');
+    }
+  }
+
+  /**
+   * JWT 토큰 디코딩
+   * @param {string} token - JWT 토큰
+   * @returns {Object} 디코딩된 페이로드
+   */
+  decodeJWT(token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      throw new Error('JWT 토큰 디코딩 실패');
+    }
+  }
+
+  /**
+   * JWT 토큰 검증 (클라이언트 사이드)
    * @param {string} token - JWT 토큰
    * @returns {Promise<Object>} 검증 결과
    */
   async verifyToken(token) {
     try {
-      const response = await fetch(`${this.baseURL}/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token })
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // 클라이언트 사이드에서 JWT 검증
+      const payload = this.decodeJWT(token);
+      
+      // 토큰 만료 시간 확인
+      const now = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp < now) {
+        throw new Error('토큰이 만료되었습니다');
       }
 
-      const result = await response.json();
-      return result;
+      return {
+        valid: true,
+        user: {
+          id: payload.sub,
+          email: payload.email,
+          name: payload.name,
+          picture: payload.picture,
+          provider: 'google'
+        }
+      };
     } catch (error) {
       console.error('토큰 검증 오류:', error);
       throw new Error('토큰 검증에 실패했습니다.');
@@ -55,18 +144,12 @@ class AuthService {
    */
   async logout() {
     try {
-      const response = await fetch(`${this.baseURL}/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Google 계정 로그아웃
+      if (this.isGoogleSDKLoaded && google.accounts) {
+        google.accounts.id.disableAutoSelect();
       }
-
-      return await response.json();
+      
+      return { message: '로그아웃되었습니다' };
     } catch (error) {
       console.error('로그아웃 오류:', error);
       throw new Error('로그아웃에 실패했습니다.');
