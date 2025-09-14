@@ -1,9 +1,11 @@
 """
 테스트 API
 """
-def handler(request):
-    """테스트 API"""
-    return {
-        "statusCode": 200,
-        "body": "테스트 API가 정상적으로 작동합니다!"
-    }
+from http.server import BaseHTTPRequestHandler
+
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'테스트 API가 정상적으로 작동합니다!')
